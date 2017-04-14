@@ -24,36 +24,34 @@ export default class GifScroller extends Component {
 
   componentDidMount = () => {
     if(this.props.inputText === ""){
-      var url='https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC';
-      this.fetchAndRenderGifs(url);
+      this.buildUrl('trending',api_key);
     } else {
       const searchTerm= this.props.inputText;
-      const url = `${endPoint}${searchTerm}${giphyKey}`
-      this.fetchAndRenderGifs(url);
+      this.buildUrl('search',api_key, searchTerm,5);
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     this.setState({gifs: [], offset: 0});
     if(nextProps.inputText===""){
-      this.fetchAndRenderGifs('https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC');
+      this.buildUrl('trending',api_key);   
     } else {
       const searchTerm= nextProps.inputText;
-      var url = `${endPoint}${searchTerm}&limit=5${giphyKey}`;
-      this.fetchAndRenderGifs(url);
+      this.buildUrl('search',api_key,searchTerm,5)
     }
   }
 
   handleGifSelect = (index, url) => {
     if (this.props.handleGifSelect){
       this.props.handleGifSelect(url);
+      console.log(index, url);
     }
-    return;
+    console.log(index, url);
   }
 
   loadMoreImages = (number) => {
     console.log('load more images', number);
-    this.state.offset++;
+    this.state.offset+=10;
     console.log(this.state.offset);
     this.buildUrl('search',api_key,this.props.inputText,5,this.state.offset);
   }
@@ -75,8 +73,9 @@ export default class GifScroller extends Component {
             data={imageList}
             renderItem={({item}) => item }
             onEndReached={this.loadMoreImages}
-            onEndReachedThreshold={0}
-            initialNumToRender={5}
+            onEndReachedThreshold={500}
+            initialNumToRender={4}
+            keyboardShouldPersistTaps={'always'}
           />
         </View>
     );
