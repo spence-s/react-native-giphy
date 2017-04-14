@@ -14,8 +14,8 @@ const api_key = 'dc6zaTOxFJmzC'
 const endPoint = 'https://api.giphy.com/v1/gifs/search?q='
 
 export default class GifScroller extends Component {
-  constructor(props){
-    super(props);
+  constructor (props) {
+    super (props);
     this.state = {
       gifs: [],
       offset: 0
@@ -23,7 +23,7 @@ export default class GifScroller extends Component {
   }
 
   componentDidMount = () => {
-    if(this.props.inputText === ""){
+    if (this.props.inputText === '') {
       this.buildUrl('trending',api_key);
     } else {
       const searchTerm= this.props.inputText;
@@ -32,9 +32,9 @@ export default class GifScroller extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    this.setState({gifs: [], offset: 0});
-    if(nextProps.inputText===""){
-      this.buildUrl('trending',api_key);   
+    this.setState({ gifs: [], offset: 0 });
+    if (nextProps.inputText==='') {
+      this.buildUrl('trending',api_key);
     } else {
       const searchTerm= nextProps.inputText;
       this.buildUrl('search',api_key,searchTerm,5)
@@ -51,7 +51,7 @@ export default class GifScroller extends Component {
 
   loadMoreImages = (number) => {
     console.log('load more images', number);
-    this.state.offset+=10;
+    this.state.offset += 10;
     console.log(this.state.offset);
     this.buildUrl('search',api_key,this.props.inputText,5,this.state.offset);
   }
@@ -60,8 +60,8 @@ export default class GifScroller extends Component {
     const imageList = this.state.gifs.map((gif, index) =>
       <TouchableOpacity onPress={() => this.handleGifSelect(index, gif)} key={index} index={index}>
         <Image
-        source={{uri:gif}}
-        style={styles.image}
+        source={ { uri:gif } }
+        style={ styles.image }
         />
       </TouchableOpacity>
     );
@@ -71,7 +71,7 @@ export default class GifScroller extends Component {
             horizontal={true}
             style={styles.scroll}
             data={imageList}
-            renderItem={({item}) => item }
+            renderItem={({ item }) => item }
             onEndReached={this.loadMoreImages}
             onEndReachedThreshold={500}
             initialNumToRender={4}
@@ -81,7 +81,7 @@ export default class GifScroller extends Component {
     );
   }
 
-  buildUrl = (endpoint, api_key, q, limit, offset ) => {
+  buildUrl = (endpoint, api_key, q, limit, offset) => {
     if (endpoint === 'trending'){
       let endpoint = 'https://api.giphy.com/v1/gifs/trending?api_key='
       const url = `${endpoint}${api_key}`
@@ -89,7 +89,7 @@ export default class GifScroller extends Component {
     }
     else {
       let endpoint = 'https://api.giphy.com/v1/gifs/search?';
-      let query = qs.stringify({q, api_key,limit, offset});
+      let query = qs.stringify({ q, api_key,limit, offset });
       const url = `${endpoint}${query}`;
       console.log(url);
       this.fetchAndRenderGifs(url);
@@ -109,10 +109,10 @@ export default class GifScroller extends Component {
       this.setState({ gifs: newGifsUrls });
     } catch (e) {
       console.log(e)
-    };
+    }
   };
 
-};
+}
 
 GifScroller.defaultProps ={
   inputText: ''
