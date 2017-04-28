@@ -8,10 +8,10 @@ import {
 
 import Image from 'react-native-image-progress';
 import qs from 'qs';
-
 const giphyKey = '&api_key=dc6zaTOxFJmzC';
-const api_key = 'dc6zaTOxFJmzC'
-const endPoint = 'https://api.giphy.com/v1/gifs/search?q='
+
+const api_key = 'dc6zaTOxFJmzC';
+const endPoint = 'https://api.giphy.com/v1/gifs/search?q=';
 
 export default class GifScroller extends Component {
   constructor (props) {
@@ -21,6 +21,8 @@ export default class GifScroller extends Component {
       offset: 0
     }
   }
+
+  
 
   componentDidMount = () => {
     if (this.props.inputText === '') {
@@ -44,15 +46,11 @@ export default class GifScroller extends Component {
   handleGifSelect = (index, url) => {
     if (this.props.handleGifSelect){
       this.props.handleGifSelect(url);
-      console.log(index, url);
     }
-    console.log(index, url);
   }
 
   loadMoreImages = (number) => {
-    console.log('load more images', number);
     this.state.offset += 10;
-    console.log(this.state.offset);
     this.buildUrl('search',api_key,this.props.inputText,5,this.state.offset);
   }
 
@@ -91,13 +89,11 @@ export default class GifScroller extends Component {
       let endpoint = 'https://api.giphy.com/v1/gifs/search?';
       let query = qs.stringify({ q, api_key,limit, offset });
       const url = `${endpoint}${query}`;
-      console.log(url);
       this.fetchAndRenderGifs(url);
     }
   }
 
   fetchAndRenderGifs = async(url) => {
-    console.log(url);
     try{
       let response = await fetch(url);
       let gifs = await response.json();
@@ -105,10 +101,9 @@ export default class GifScroller extends Component {
         return gif.images.fixed_height_downsampled.url;
       });
       let newGifsUrls = this.state.gifs.concat(gifsUrls);
-      console.log(newGifsUrls);
       this.setState({ gifs: newGifsUrls });
     } catch (e) {
-      console.log(e)
+        console.log(e);
     }
   };
 

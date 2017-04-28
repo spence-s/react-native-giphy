@@ -4,13 +4,8 @@
  * @flow
  */
 
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import React from 'react';
+import { AppRegistry } from 'react-native';
 
 import giphy from './src/example/App'
 

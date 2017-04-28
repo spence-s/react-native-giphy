@@ -14,7 +14,7 @@ class App extends Component{
       text: '',
       showGif: false,
     };
-  };
+  }
   renderGif = () => {
     if(this.state.showGif){
       return (
@@ -28,13 +28,13 @@ class App extends Component{
       <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
         {this.renderGif()}
         <TextInput
-          onChangeText={(text) => {this.setState({text})}}
+          onChangeText={(text) => {this.setState( { text })}}
           value={this.state.text}
           style={styles.input}/>
           <Button
-            title={"Show Gif Scroller"}
+            title={'Show Gif Scroller'}
             onPress={() => {
-              this.setState({showGif: !this.state.showGif})
+              this.setState({ showGif: !this.state.showGif } )
             }}
           />
       </KeyboardAvoidingView>
