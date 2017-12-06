@@ -22,7 +22,11 @@ export default class GifScroller extends Component {
     }
   }
 
-  
+
+  getPreviewUrl = (gif) => {
+    const key = this.props.previewQuality || 'fixed_height_downsampled' ;
+    return gif.images[key].url;
+  }
 
   componentDidMount = () => {
     if (this.props.inputText === '') {
@@ -43,9 +47,9 @@ export default class GifScroller extends Component {
     }
   }
 
-  handleGifSelect = (index, url) => {
+  handleGifSelect = (index, gif) => {
     if (this.props.handleGifSelect){
-      this.props.handleGifSelect(url);
+      this.props.handleGifSelect(this.getPreviewUrl(gif), gif);
     }
   }
 
@@ -58,24 +62,24 @@ export default class GifScroller extends Component {
     const imageList = this.state.gifs.map((gif, index) =>
       <TouchableOpacity onPress={() => this.handleGifSelect(index, gif)} key={index} index={index}>
         <Image
-        source={ { uri:gif } }
-        style={ styles.image }
+          source={ { uri:this.getPreviewUrl(gif) } }
+          style={ styles.image }
         />
       </TouchableOpacity>
     );
     return (
-        <View style={this.props.style} >
-          <FlatList
-            horizontal={true}
-            style={styles.scroll}
-            data={imageList}
-            renderItem={({ item }) => item }
-            onEndReached={this.loadMoreImages}
-            onEndReachedThreshold={500}
-            initialNumToRender={4}
-            keyboardShouldPersistTaps={'always'}
-          />
-        </View>
+      <View style={this.props.style} >
+        <FlatList
+          horizontal={true}
+          style={styles.scroll}
+          data={imageList}
+          renderItem={({ item }) => item }
+          onEndReached={this.loadMoreImages}
+          onEndReachedThreshold={500}
+          initialNumToRender={4}
+          keyboardShouldPersistTaps={'always'}
+        />
+      </View>
     );
   }
 
@@ -97,13 +101,10 @@ export default class GifScroller extends Component {
     try{
       let response = await fetch(url);
       let gifs = await response.json();
-      let gifsUrls = gifs.data.map((gif) => {
-        return gif.images.fixed_height_downsampled.url;
-      });
-      let newGifsUrls = this.state.gifs.concat(gifsUrls);
-      this.setState({ gifs: newGifsUrls });
+      let newGifs = this.state.gifs.concat(gifs.data);
+      this.setState({ gifs: newGifs });
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
   };
 
