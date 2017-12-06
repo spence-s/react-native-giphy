@@ -43,9 +43,10 @@ export default class GifScroller extends Component {
     }
   }
 
-  handleGifSelect = (index, url) => {
+  handleGifSelect = (index, gif) => {
     if (this.props.handleGifSelect){
-      this.props.handleGifSelect(url);
+      const previewUrl = gif.images.fixed_height_downsampled.url;
+      this.props.handleGifSelect(previewUrl, gif);
     }
   }
 
@@ -97,11 +98,8 @@ export default class GifScroller extends Component {
     try{
       let response = await fetch(url);
       let gifs = await response.json();
-      let gifsUrls = gifs.data.map((gif) => {
-        return gif.images.fixed_height_downsampled.url;
-      });
-      let newGifsUrls = this.state.gifs.concat(gifsUrls);
-      this.setState({ gifs: newGifsUrls });
+      let newGifs = this.state.gifs.concat(gifs);
+      this.setState({ gifs: newGifs });
     } catch (e) {
         console.log(e);
     }
