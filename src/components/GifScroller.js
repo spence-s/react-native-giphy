@@ -24,8 +24,9 @@ export default class GifScroller extends Component {
 
 
   getPreviewUrl = (gif) => {
-    const key = this.props.previewQuality || 'fixed_height_downsampled' ;
-    return gif.images[key].url;
+    const quality = this.props.previewQuality || 'fixed_height_downsampled' ;
+    const format = this.props.previewFormat || 'url'; // could also be 'webp' or 'mp4'
+    return gif.images[quality][format];
   }
 
   componentDidMount = () => {
