@@ -9,7 +9,6 @@
 	"dependencies": {
 		"qs": "^6.4.0",
 		"react": "16.0.0-alpha.6",
-		"react-native": "0.43.3",
 		"react-native-image-progress": "^0.6.0"
 	},
 	"devDependencies": {
@@ -26,8 +25,7 @@
 	"author": {
 		"name": "Spencer Snyder",
 		"email": "sasnyde2@gmail.com"
-	}
-	,
+	},
 	"jest": {
 		"preset": "react-native"
 	}

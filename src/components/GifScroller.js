@@ -1,11 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   FlatList
 } from 'react-native';
-
 import Image from 'react-native-image-progress';
 import qs from 'qs';
 const giphyKey = '&api_key=dc6zaTOxFJmzC';
@@ -22,7 +21,7 @@ export default class GifScroller extends Component {
     }
   }
 
-  
+
 
   componentDidMount = () => {
     if (this.props.inputText === '') {
