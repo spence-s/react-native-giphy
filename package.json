@@ -1,14 +1,14 @@
 {
 	"name": "react-native-giphy",
 	"main": "src/components/GifScroller",
-	"version": "0.0.2",
+	"version": "0.1.0",
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
 		"test": "jest"
 	},
 	"dependencies": {
+		"lodash": "^4.17.15",
 		"qs": "^6.4.0",
-		"react": "16.0.0-alpha.6",
 		"react-native-image-progress": "^1.1.1"
 	},
 	"devDependencies": {
