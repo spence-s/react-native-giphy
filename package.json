@@ -9,7 +9,7 @@
 	"dependencies": {
 		"qs": "^6.4.0",
 		"react": "16.0.0-alpha.6",
-		"react-native-image-progress": "^0.6.0"
+		"react-native-image-progress": "^1.1.1"
 	},
 	"devDependencies": {
 		"babel-eslint": "^7.2.2",
