@@ -10,6 +10,7 @@ import qs from 'qs';
 import _ from 'lodash';
 
 const baseEndPoint = 'https://api.giphy.com/v1/gifs/';
+// Giphy documentation https://developers.giphy.com/docs/api
 
 export default class GifScroller extends Component {
   static defaultProps = {
