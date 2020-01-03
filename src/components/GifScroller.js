@@ -29,7 +29,7 @@ export default class GifScroller extends Component {
       offset: 0
     }
     this.emitSearchTermChange = _.debounce(({searchTerm, apiKey, limit, offset, rating, lang, randomID}) => {
-      this.fetchAndRenderGifs({searchTerm, apiKey, limit, offset, rating, lang, randomID});
+      this.fetchAndRenderGifs({searchTerm, apiKey, limit, offset, rating, lang, randomID}).catch(e => console.warn(e));
     }, 1000);
   }
 
@@ -60,9 +60,9 @@ export default class GifScroller extends Component {
 
   loadMoreImages = () => {
     this.setState({offset: this.state.offset + 10}, () => {
-      const {inputText: searchTerm, apiKey} = this.props;
+      const {inputText: searchTerm, apiKey, rating, lang, randomID} = this.props;
       const {offset} = this.state;
-      this.emitSearchTermChange({searchTerm, apiKey, limit: 5, offset}).catch(e => console.warn(e));
+      this.emitSearchTermChange({searchTerm, apiKey, limit: 5, offset, rating, lang, randomID});
     });
   }
 
@@ -104,19 +104,15 @@ export default class GifScroller extends Component {
 
   fetchAndRenderGifs = async ({searchTerm, apiKey, limit, offset, rating, lang, randomID}) => {
     const url = this.buildUrl({searchTerm, apiKey, limit, offset, rating, lang, randomID});
-    try {
-      let response = await fetch(url);
-      let res = await response.json();
-      let gifsUrls = _.map(res.data, (gif) => {
-        return _.get(gif, 'images.fixed_height_downsampled.url');
-      });
-      let newGifsUrls = this.state.gifs.concat(gifsUrls);
-      const offset = _.get(res, 'pagination.offset') || this.state.offset;
-      this.setState({ gifs: newGifsUrls, offset });
-    } catch (e) {
-      console.log(e);
-    }
-  };
+    let response = await fetch(url);
+    let res = await response.json();
+    let gifsUrls = _.map(res.data, (gif) => {
+      return _.get(gif, 'images.fixed_height_downsampled.url');
+    });
+    let newGifsUrls = this.state.gifs.concat(gifsUrls);
+    const resOffset = _.get(res, 'pagination.offset') || this.state.offset;
+    this.setState({gifs: newGifsUrls, offset: resOffset});
+  }
 
 }
 
