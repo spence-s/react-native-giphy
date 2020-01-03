@@ -28,8 +28,8 @@ export default class GifScroller extends Component {
       gifs: [],
       offset: 0
     }
-    this.emitSearchTermChange = _.debounce(({searchTerm, apiKey, limit, offset, rating, lang, randomID}) => {
-      this.fetchAndRenderGifs({searchTerm, apiKey, limit, offset, rating, lang, randomID}).catch(e => console.warn(e));
+    this.emitSearchTermChange = _.debounce((args) => {
+      this.fetchAndRenderGifs(args).catch(e => console.warn(e));
     }, 1000);
   }
 
