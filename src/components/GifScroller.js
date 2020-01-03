@@ -12,14 +12,24 @@ import _ from 'lodash';
 const baseEndPoint = 'https://api.giphy.com/v1/gifs/';
 
 export default class GifScroller extends Component {
+  static defaultProps = {
+    apiKey: '',
+    inputText: '',
+    handleGifSelect: () => {},
+    style: {},
+    rating: '',
+    lang: 'en',
+    randomID: ''
+  }
+
   constructor (props) {
     super (props);
     this.state = {
       gifs: [],
       offset: 0
     }
-    this.emitSearchTermChange = _.debounce(({searchTerm, apiKey, limit, offset}) => {
-      this.fetchAndRenderGifs({searchTerm, apiKey, limit, offset});
+    this.emitSearchTermChange = _.debounce(({searchTerm, apiKey, limit, offset, rating, lang, randomID}) => {
+      this.fetchAndRenderGifs({searchTerm, apiKey, limit, offset, rating, lang, randomID});
     }, 1000);
   }
 
@@ -48,11 +58,12 @@ export default class GifScroller extends Component {
     }
   }
 
-  loadMoreImages = (number) => {
-    this.state.offset += 10;
-    const {inputText: searchTerm, apiKey} = this.props;
-    const {offset} = this.state;
-    this.fetchAndRenderGifs({searchTerm, apiKey, limit: 5, offset}).catch(e => console.warn(e));
+  loadMoreImages = () => {
+    this.setState({offset: this.state.offset + 10}, () => {
+      const {inputText: searchTerm, apiKey} = this.props;
+      const {offset} = this.state;
+      this.emitSearchTermChange({searchTerm, apiKey, limit: 5, offset}).catch(e => console.warn(e));
+    });
   }
 
   render() {
@@ -80,32 +91,34 @@ export default class GifScroller extends Component {
     );
   }
 
-  buildUrl = ({apiKey, searchTerm, limit, offset}) => {
+  buildUrl = ({apiKey = '', searchTerm, limit = 5, offset = 0, rating, lang, randomID}) => {
     let endpoint = searchTerm ? 'search' : 'trending';
-    let query = searchTerm ? qs.stringify({ q: searchTerm, api_key: apiKey, limit, offset }) : `api_key=${apiKey}`;
+    const queryObj = { api_key: apiKey, limit, offset };
+    if (searchTerm) queryObj.q = searchTerm;
+    if (rating) queryObj.rating = rating;
+    if (lang) queryObj.lang = lang;
+    if (randomID) queryObj.random_id = randomID;
+    let query = qs.stringify(queryObj);
     return `${baseEndPoint}${endpoint}?${query}`;
   }
 
-  fetchAndRenderGifs = async ({searchTerm, apiKey, limit = 5, offset}) => {
-    const url = this.buildUrl({searchTerm, apiKey, limit, offset});
+  fetchAndRenderGifs = async ({searchTerm, apiKey, limit, offset, rating, lang, randomID}) => {
+    const url = this.buildUrl({searchTerm, apiKey, limit, offset, rating, lang, randomID});
     try {
       let response = await fetch(url);
-      let gifs = await response.json();
-      let gifsUrls = gifs.data.map((gif) => {
+      let res = await response.json();
+      let gifsUrls = _.map(res.data, (gif) => {
         return _.get(gif, 'images.fixed_height_downsampled.url');
       });
       let newGifsUrls = this.state.gifs.concat(gifsUrls);
-      this.setState({ gifs: newGifsUrls });
+      const offset = _.get(res, 'pagination.offset') || this.state.offset;
+      this.setState({ gifs: newGifsUrls, offset });
     } catch (e) {
       console.log(e);
     }
   };
 
 }
-
-GifScroller.defaultProps ={
-  inputText: ''
-};
 
 const styles = StyleSheet.create({
   scroll: {
