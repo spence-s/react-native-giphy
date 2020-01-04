@@ -63,7 +63,7 @@ export default class GifScroller extends Component {
     this.setState({offset: this.state.offset + 10}, () => {
       const {inputText: searchTerm, apiKey, rating, lang, randomID} = this.props;
       const {offset} = this.state;
-      this.emitSearchTermChange({searchTerm, apiKey, limit: 5, offset, rating, lang, randomID});
+      this.emitSearchTermChange({searchTerm, apiKey, limit: 5, offset, rating, lang, randomID, append: true});
     });
   }
 
@@ -103,14 +103,14 @@ export default class GifScroller extends Component {
     return `${baseEndPoint}${endpoint}?${query}`;
   }
 
-  fetchAndRenderGifs = async ({searchTerm, apiKey, limit, offset, rating, lang, randomID}) => {
+  fetchAndRenderGifs = async ({searchTerm, apiKey, limit, offset, rating, lang, randomID, append = false}) => {
     const url = this.buildUrl({searchTerm, apiKey, limit, offset, rating, lang, randomID});
     let response = await fetch(url);
     let res = await response.json();
     let gifsUrls = _.map(res.data, (gif) => {
       return _.get(gif, 'images.fixed_height_downsampled.url');
     });
-    let newGifsUrls = this.state.gifs.concat(gifsUrls);
+    let newGifsUrls = append ? this.state.gifs.concat(gifsUrls) : gifsUrls;
     const resOffset = _.get(res, 'pagination.offset') || this.state.offset;
     this.setState({gifs: newGifsUrls, offset: resOffset});
   }

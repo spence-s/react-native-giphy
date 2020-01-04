@@ -1,7 +1,7 @@
 {
 	"name": "react-native-giphy",
 	"main": "src/components/GifScroller",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
 		"test": "jest"
